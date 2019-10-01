@@ -1,0 +1,118 @@
+package Minigames;
+    
+import DLibX.DConsole;
+import jconsole.JConsole;
+import party.pkg2.pkg0.Player;
+
+public class StageShow extends Minigame { // game by adrian. Pick one of the four pedestals and something drops on you
+
+    GamePlayer[] gp = new GamePlayer[p.length];
+    Stage s;
+
+    public StageShow(Player[] p, DConsole dc, JConsole[] j) {
+        super(p, dc, j);
+    }
+
+    @Override
+    public void run() {
+        s = new Stage();
+        for (int i = 0; i < p.length; i++) {
+            gp[i] = new GamePlayer(i);
+        }
+
+    }
+
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void reward(int player) {
+
+    }
+
+    private class GamePlayer {
+
+        private int c;
+        private String[] character = {"mario", "luigi", "yoshi", "peach"};
+        private String characterLink;
+
+        public GamePlayer(int c) {
+            this.c = c;
+            characterLink = "assets/animations/" + character[c] + "/down/1.png";
+        }
+        
+        public void draw() {
+            
+        }
+
+        public void moveCursor() {
+
+        }
+
+        public void reset() {
+
+        }
+
+    }// gamePlayer class end
+
+    private class Stage {
+
+        String[] s = {"Coins", "Crush", "Nothing", "SpikeBall"};
+        int[] randomOrder = {-1,-1,-1,-1};
+
+        public Stage() {
+            randomize();
+        }
+
+        public void randomize() {
+            int added = (int)(Math.random() * 4);
+            for (int i = 0; i < 4; i++) { //randomize 
+                while(true) {
+                    int temp = (int)(Math.random() * 4);
+                    if(randomOrder[temp] == -1) {
+                        randomOrder[temp] = i;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        public void draw() {
+            for (int i = 0; i < 4; i++) {
+                java.lang.reflect.Method method = null; // link the method to the right class. start null
+                try {
+                    method = s.getClass().getMethod(s[i], Integer.class, Integer.class); // of the string chosen get that method i the mystery class
+                } catch (Exception e) {
+                }
+                try {
+                    method.invoke(s[randomOrder[i]], ((i + 1) * 128) + ( i * 32), i); // run that method
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        public void Coins(Integer x, Integer block) { // give players 5 coins
+
+        }
+        
+        public void Crush(Integer x, Integer block) { // crush the player killing them
+
+        }
+
+        public void Nothing(Integer x, Integer block) { // leave the block alone
+
+        }
+
+        public void SpikeBall(Integer x, Integer block) { //remove 5 coins from player & kill them
+
+        }
+
+        public void reset() {
+
+        }
+
+    } // stage class end
+
+}

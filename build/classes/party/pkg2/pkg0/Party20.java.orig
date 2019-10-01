@@ -1,0 +1,66 @@
+package party.pkg2.pkg0;
+
+import DLibX.DConsole;
+import Minigames.*;
+import jconsole.JConsole;
+
+public class Party20 { // Discord: https://discord.gg/rRM7nGC
+
+    public static void main(String[] args) {
+
+        int playerCount = 4;
+        int mSelect = 0;
+
+        DConsole dc = new DConsole();
+        JConsole[] j = new JConsole[playerCount]; // comment and remove JConsole if u have no controllers connected. it will die
+        Player p[] = new Player[playerCount];
+        Player rS = new Player();
+        Tile[] t = new Tile[101]; // enter the number of color tiles there are
+        Board f = new Board();
+        Minigame m[] = new Minigame[1];
+        m[0] = new MiniGame01(p, dc, j);
+
+        dc.setSize(960, 640);
+
+        f.start(dc, t, p);
+        for (int c = 0; c < playerCount; c++) {
+            j[c] = new JConsole(c);
+            p[c] = new Player();
+            p[c].start(f, j[c], dc, c);
+        }
+        rS.startTimer();
+        f.getPlaces();
+        while (true) {// game is here
+            f.draw();
+            for (int c = 0; c < playerCount; c++) {//for each player
+                f.draw();
+                for (int r = 0; r < playerCount; r++) { // draw all 4 players
+                    p[r].draw();
+                }
+                dc.redraw();
+                p[c].roll();
+                while (p[c].returnRoll() != 0) { // while you can still move do that players turn
+                    dc.clear();
+
+                    f.draw();
+                    p[c].drawRoll();
+                    p[c].move();
+                    p[c].frame();
+
+                    for (int r = 0; r < playerCount; r++) {
+                        p[r].draw();
+                    }
+
+                    dc.redraw();
+                    dc.pause(100);
+                }
+                t[p[c].getTile()].reward(p[c]);
+                System.out.println(p[c].getScore()); // sys out the coins
+                dc.pause(1000);
+            }
+
+            m[mSelect].run();
+            dc.setSize(960, 640);
+        }
+    }
+}
